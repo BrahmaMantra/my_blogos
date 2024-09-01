@@ -4,17 +4,19 @@
 #![test_runner(blog_os::test_runner)]
 #![reexport_test_harness_main = "test_main"]
 
-use core::panic::PanicInfo;
 use blog_os::println;
+use core::{arch::x86_64, panic::PanicInfo};
 
 #[no_mangle]
 pub extern "C" fn _start() -> ! {
     println!("Hello World{}", "!");
 
+    blog_os::init();
     #[cfg(test)]
     test_main();
 
-    loop {}
+    println!("It did not crash!");
+    blog_os::hlt_loop();  
 }
 
 /// This function is called on panic.
@@ -28,5 +30,6 @@ fn panic(info: &PanicInfo) -> ! {
 #[cfg(test)]
 #[panic_handler]
 fn panic(info: &PanicInfo) -> ! {
-    blog_os::test_panic_handler(info)
+    blog_os::test_panic_handler(info);
+    blog_os::hlt_loop(); 
 }
