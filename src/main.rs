@@ -5,6 +5,7 @@
 #![reexport_test_harness_main = "test_main"]
 
 use blog_os::println;
+use ::x86_64::registers::control::Cr3;
 use core::{arch::x86_64, panic::PanicInfo};
 
 #[no_mangle]
@@ -12,6 +13,8 @@ pub extern "C" fn _start() -> ! {
     println!("Hello World{}", "!");
 
     blog_os::init();
+    let (level_4_page_table, _) = Cr3::read();
+    println!("Level 4 page table at: {:?}", level_4_page_table.start_address());
     #[cfg(test)]
     test_main();
 
