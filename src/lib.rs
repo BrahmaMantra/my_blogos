@@ -13,6 +13,8 @@ pub mod serial;
 pub mod vga_buffer;
 pub mod gdt;
 pub mod memory;
+pub mod allocator;
+extern crate alloc;
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[repr(u32)]
 pub enum QemuExitCode {
