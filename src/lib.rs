@@ -4,16 +4,17 @@
 #![test_runner(crate::test_runner)]
 #![reexport_test_harness_main = "test_main"]
 #![feature(abi_x86_interrupt)]
+#![feature(const_mut_refs)]
 
 use core::panic::PanicInfo;
 
 use bootloader::entry_point;
+pub mod allocator;
+pub mod gdt;
 pub mod interrupts;
+pub mod memory;
 pub mod serial;
 pub mod vga_buffer;
-pub mod gdt;
-pub mod memory;
-pub mod allocator;
 extern crate alloc;
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[repr(u32)]
@@ -83,7 +84,7 @@ pub fn init() {
     gdt::init();
     interrupts::init_idt();
     unsafe { interrupts::PICS.lock().initialize() }; //PIC初始化
-    x86_64::instructions::interrupts::enable();   //启用中断
+    x86_64::instructions::interrupts::enable(); //启用中断
 }
 
 pub fn hlt_loop() -> ! {

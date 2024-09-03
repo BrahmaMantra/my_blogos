@@ -22,7 +22,8 @@ macro_rules! println {
 #[doc(hidden)]
 pub fn _print(args: fmt::Arguments) {
     use core::fmt::Write;
-    x86_64::instructions::interrupts::without_interrupts(|| {     // 关中断
+    x86_64::instructions::interrupts::without_interrupts(|| {
+        // 关中断
         WRITER.lock().write_fmt(args).unwrap();
     });
 }
